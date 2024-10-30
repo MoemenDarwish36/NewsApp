@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       routes: {
         Splash.routeName: (_) => const Splash(),
         HomeScreen.routeName: (_) => const HomeScreen(),
+        //////////////
       },
       initialRoute: Splash.routeName,
       theme: AppTheme.lightTheme,
