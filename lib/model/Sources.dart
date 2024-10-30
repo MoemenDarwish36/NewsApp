@@ -8,13 +8,14 @@
 
 class Sources {
   Sources({
-      this.id, 
-      this.name, 
-      this.description, 
-      this.url, 
-      this.category, 
-      this.language, 
-      this.country,});
+    this.id,
+    this.name,
+    this.description,
+    this.url,
+    this.category,
+    this.language,
+    this.country,
+  });
 
   Sources.fromJson(dynamic json) {
     id = json['id'];
@@ -25,6 +26,7 @@ class Sources {
     language = json['language'];
     country = json['country'];
   }
+
   String? id;
   String? name;
   String? description;
@@ -44,5 +46,4 @@ class Sources {
     map['country'] = country;
     return map;
   }
-
 }
