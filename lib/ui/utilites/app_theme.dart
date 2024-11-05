@@ -20,9 +20,21 @@ class AppTheme {
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: AppColors.blackColor),
+        bodyLarge: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AppColors.blackColor),
         titleSmall: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: AppColors.blackColor),
+        bodySmall: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppColors.blackColor),
+        bodyMedium: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppColors.greyColor),
       ));
 }

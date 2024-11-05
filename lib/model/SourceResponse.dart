@@ -5,7 +5,7 @@ import 'Sources.dart';
 
 class SourceResponse {
   String? status;
-  List<Sources>? sources;
+  List<Source>? sources;
   String? code;
 
   String? message;
@@ -24,7 +24,7 @@ class SourceResponse {
     if (json['sources'] != null) {
       sources = [];
       json['sources'].forEach((v) {
-        sources?.add(Sources.fromJson(v));
+        sources?.add(Source.fromJson(v));
       });
     }
   }
