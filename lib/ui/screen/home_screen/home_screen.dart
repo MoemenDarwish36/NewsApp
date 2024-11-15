@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/category/category_details.dart';
 import 'package:news_app/category/category_fragment.dart';
-import 'package:news_app/model/category_model.dart';
+import 'package:news_app/category/category_model.dart';
 import 'package:news_app/ui/screen/home_screen/drawer/home_drawer.dart';
+import 'package:news_app/ui/screen/home_screen/search/news_search_delegate.dart';
 import 'package:news_app/ui/screen/home_screen/settings/settings_tab.dart';
 import 'package:news_app/ui/utilites/app_assets.dart';
 import 'package:news_app/ui/utilites/app_colors.dart';
@@ -42,6 +43,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         : selectedCategory!.id,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      showSearch(
+                          context: context, delegate: NewsSearchDelegate());
+                    },
+                    icon: Icon(
+                      Icons.search,
+                      size: 25,
+                      color: AppColors.blackColor,
+                    ))
+              ],
             ),
             drawer: Drawer(
               child: HomeDrawer(

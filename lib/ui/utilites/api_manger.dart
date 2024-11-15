@@ -14,8 +14,10 @@ class ApiManager {
   static const String _newsEndPoint = "/v2/everything";
 
   static Future<SourceResponse?> getSources(String categoryId) async {
-    Uri url = Uri.https(_baseUrl, _sourcesEndPoint,
-        {'apiKey': _apiKey, 'category': categoryId});
+    Uri url = Uri.https(_baseUrl, _sourcesEndPoint, {
+      'apiKey': _apiKey,
+      'category': categoryId,
+    });
     http.Response response = await http.get(url);
     try {
       Map json = jsonDecode(response.body) as Map;
@@ -25,9 +27,27 @@ class ApiManager {
     }
   }
 
-  static Future<NewsResponse?> getNewsBySourceId(String sourceId) async {
-    Uri url = Uri.https(
-        _baseUrl, _newsEndPoint, {'apiKey': _apiKey, 'sources': sourceId});
+  static Future<NewsResponse?> getNewsBySourceId(
+      {String? sourceId, int? page, int? pageSize}) async {
+    Uri url = Uri.https(_baseUrl, _newsEndPoint, {
+      'apiKey': _apiKey,
+      'sources': sourceId,
+      'pageSize': pageSize.toString(),
+      'page': page.toString()
+    });
+
+    http.Response response = await http.get(url);
+    try {
+      Map json = jsonDecode(response.body) as Map;
+      return NewsResponse.fromJson(json);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  static Future<NewsResponse?> getNewsSearchBySourceId(String query) async {
+    Uri url =
+        Uri.https(_baseUrl, _newsEndPoint, {'apiKey': _apiKey, 'q': query});
 
     http.Response response = await http.get(url);
     try {

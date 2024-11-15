@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:news_app/provider/language_provider.dart';
 import 'package:news_app/ui/screen/home_screen/home_screen.dart';
+import 'package:news_app/ui/screen/news_details/news_details.dart';
 import 'package:news_app/ui/screen/splash_screen/splash_screen.dart';
 import 'package:news_app/ui/utilites/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
       routes: {
         Splash.routeName: (_) => const Splash(),
         HomeScreen.routeName: (_) => const HomeScreen(),
+        NewsDetails.routeName: (_) => NewsDetails(),
       },
       initialRoute: Splash.routeName,
       theme: AppTheme.lightTheme,

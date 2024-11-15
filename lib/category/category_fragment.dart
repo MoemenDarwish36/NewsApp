@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/category/category_item.dart';
-import 'package:news_app/model/category_model.dart';
+import 'package:news_app/category/category_model.dart';
 
 class CategoryFragment extends StatelessWidget {
-  late var categoriesList;
+  late dynamic categoriesList;
 
   Function onCategoryItemClick;
 

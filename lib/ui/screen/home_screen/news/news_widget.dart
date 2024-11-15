@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/model/Articles.dart';
 import 'package:news_app/model/NewsResponse.dart';
 import 'package:news_app/model/Sources.dart';
 import 'package:news_app/ui/screen/home_screen/news/news_item.dart';
@@ -16,10 +17,47 @@ class NewsWidget extends StatefulWidget {
 }
 
 class _NewsWidgetState extends State<NewsWidget> {
+  int page = 1;
+
+  int pageSize = 10;
+
+  ScrollController scrollController = ScrollController();
+
+  List<News> newsList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge) {
+        if (scrollController.offset != 0 &&
+            scrollController.position.pixels != 0) {
+          page++;
+          loadMoreNews();
+        }
+      }
+    });
+  }
+
+  Future<void> loadMoreNews() async {
+    NewsResponse? response = await ApiManager.getNewsBySourceId(
+        sourceId: widget.source.id ?? '', page: page++, pageSize: pageSize);
+    newsList.addAll(response?.articles ?? []);
+
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<NewsResponse?>(
-        future: ApiManager.getNewsBySourceId(widget.source.id ?? ''),
+        future: ApiManager.getNewsBySourceId(
+            sourceId: widget.source.id ?? '', page: page),
         builder: (context, snapShot) {
           if (snapShot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -40,7 +78,8 @@ class _NewsWidgetState extends State<NewsWidget> {
                         backgroundColor:
                             WidgetStateProperty.all(AppColors.blueColor)),
                     onPressed: () {
-                      ApiManager.getNewsBySourceId(widget.source.id ?? '');
+                      ApiManager.getNewsBySourceId(
+                          sourceId: widget.source.id ?? '');
                       setState(() {});
                     },
                     child: Text("Try Again",
@@ -61,7 +100,8 @@ class _NewsWidgetState extends State<NewsWidget> {
                         backgroundColor:
                             WidgetStateProperty.all(AppColors.blueColor)),
                     onPressed: () {
-                      ApiManager.getNewsBySourceId(widget.source.id ?? '');
+                      ApiManager.getNewsBySourceId(
+                          sourceId: widget.source.id ?? '');
                       setState(() {});
                     },
                     child: Text(
@@ -71,8 +111,9 @@ class _NewsWidgetState extends State<NewsWidget> {
               ],
             );
           }
-          var newsList = snapShot.data!.articles!;
+          newsList = snapShot.data!.articles!;
           return ListView.builder(
+              controller: scrollController,
               itemCount: newsList.length,
               itemBuilder: (context, index) {
                 return NewsItem(news: newsList[index]);

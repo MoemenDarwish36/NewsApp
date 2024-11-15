@@ -24,7 +24,6 @@ class NewsResponse {
   int? totalResults;
   List<News>? articles;
   String? code;
-
   String? message;
 
   Map<String, dynamic> toJson() {
