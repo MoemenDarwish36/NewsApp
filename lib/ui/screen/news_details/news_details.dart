@@ -38,71 +38,73 @@ class NewsDetails extends StatelessWidget {
           ),
           body: Container(
             padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: CachedNetworkImage(
-                    imageUrl: news.urlToImage ?? '',
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height * .3,
-                    fit: BoxFit.fill,
-                    placeholder: (context, url) => Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primaryLightColor,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: CachedNetworkImage(
+                      imageUrl: news.urlToImage ?? '',
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * .3,
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) => Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primaryLightColor,
+                        ),
                       ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  news.author ?? '',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(news.title ?? '',
-                    style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  DateTime.parse(news.publishedAt ?? '').toFormattedDate,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.end,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(news.content ?? ''),
-                const SizedBox(
-                  height: 15,
-                ),
-                InkWell(
-                  onTap: () {
-                    _launchUrl(news.url ?? '');
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('View Full Article'),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 15,
-                      )
-                    ],
+                  const SizedBox(
+                    height: 10,
                   ),
-                )
-              ],
+                  Text(
+                    news.author ?? '',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(news.title ?? '',
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    DateTime.parse(news.publishedAt ?? '').toFormattedDate,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.end,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(news.content ?? ''),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _launchUrl(news.url ?? '');
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text('View Full Article'),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
