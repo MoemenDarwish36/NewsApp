@@ -3,7 +3,9 @@ import 'package:news_app/model/Articles.dart';
 import 'package:news_app/model/NewsResponse.dart';
 import 'package:news_app/model/Sources.dart';
 import 'package:news_app/ui/screen/home_screen/news/news_item.dart';
+import 'package:news_app/ui/screen/home_screen/news/news_widget_view_model.dart';
 import 'package:news_app/ui/utilites/api_manger.dart';
+import 'package:provider/provider.dart';
 
 import '../../../utilites/app_colors.dart';
 
@@ -24,10 +26,12 @@ class _NewsWidgetState extends State<NewsWidget> {
   ScrollController scrollController = ScrollController();
 
   List<News> newsList = [];
+  NewsWidgetViewModel viewModel = NewsWidgetViewModel();
 
   @override
   void initState() {
     super.initState();
+    viewModel.getNewsBySourceId(widget.source.id ?? '', page);
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.offset != 0 &&
@@ -55,22 +59,16 @@ class _NewsWidgetState extends State<NewsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NewsResponse?>(
-        future: ApiManager.getNewsBySourceId(
-            sourceId: widget.source.id ?? '', page: page),
-        builder: (context, snapShot) {
-          if (snapShot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primaryLightColor,
-              ),
-            );
-          } else if (snapShot.hasError) {
+    return ChangeNotifierProvider(
+        create: (context) => viewModel,
+        child:
+            Consumer<NewsWidgetViewModel>(builder: (context, viewModel, child) {
+          if (viewModel.errorMessage != null) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
-                  child: Text("Some thing went wrong",
+                  child: Text(viewModel.errorMessage!,
                       style: Theme.of(context).textTheme.bodySmall),
                 ),
                 ElevatedButton(
@@ -78,8 +76,7 @@ class _NewsWidgetState extends State<NewsWidget> {
                         backgroundColor:
                             WidgetStateProperty.all(AppColors.blueColor)),
                     onPressed: () {
-                      ApiManager.getNewsBySourceId(
-                          sourceId: widget.source.id ?? '');
+                      viewModel.getNewsBySourceId(widget.source.id ?? '', page);
                       setState(() {});
                     },
                     child: Text("Try Again",
@@ -87,37 +84,20 @@ class _NewsWidgetState extends State<NewsWidget> {
               ],
             );
           }
-          if (snapShot.data!.status != 'ok') {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Text(snapShot.data!.message!,
-                      style: Theme.of(context).textTheme.bodySmall),
-                ),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            WidgetStateProperty.all(AppColors.blueColor)),
-                    onPressed: () {
-                      ApiManager.getNewsBySourceId(
-                          sourceId: widget.source.id ?? '');
-                      setState(() {});
-                    },
-                    child: Text(
-                      "Try Again",
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ))
-              ],
+          if (viewModel.newsList == null) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primaryLightColor,
+              ),
             );
+          } else {
+            return ListView.builder(
+                controller: scrollController,
+                itemCount: viewModel.newsList!.length,
+                itemBuilder: (context, index) {
+                  return NewsItem(news: viewModel.newsList![index]);
+                });
           }
-          newsList = snapShot.data!.articles!;
-          return ListView.builder(
-              controller: scrollController,
-              itemCount: newsList.length,
-              itemBuilder: (context, index) {
-                return NewsItem(news: newsList[index]);
-              });
-        });
+        }));
   }
 }

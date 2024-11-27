@@ -78,14 +78,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   CategoryModel? selectedCategory;
 
-  onCategoryItemClick(CategoryModel newCategory) {
+  void onCategoryItemClick(CategoryModel newCategory) {
     selectedCategory = newCategory;
     setState(() {});
   }
 
   int selectSideMenuItem = HomeDrawer.categories;
 
-  onSideMenuItemClick(int newSideMenuItem) {
+  void onSideMenuItemClick(int newSideMenuItem) {
     selectSideMenuItem = newSideMenuItem;
     selectedCategory = null;
     Navigator.pop(context);
