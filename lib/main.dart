@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:news_app/provider/language_provider.dart';
@@ -8,8 +9,11 @@ import 'package:news_app/ui/screen/splash_screen/splash_screen.dart';
 import 'package:news_app/ui/utilites/app_theme.dart';
 import 'package:provider/provider.dart';
 
+import 'my_bloc_observer/my_bloc_observer.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = MyBlocObserver();
 
   LanguageProvider languageProvider = LanguageProvider();
 

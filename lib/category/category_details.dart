@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/category/category_model.dart';
+import 'package:news_app/category/cubit/category_details_view_model.dart';
+import 'package:news_app/category/cubit/source_state.dart';
 
-import '../model/SourceResponse.dart';
 import '../ui/screen/home_screen/tabs/tab_widget.dart';
-import '../ui/utilites/api_manger.dart';
 import '../ui/utilites/app_colors.dart';
 
 class CategoryDetails extends StatefulWidget {
@@ -16,23 +17,32 @@ class CategoryDetails extends StatefulWidget {
 }
 
 class _CategoryDetailsState extends State<CategoryDetails> {
+  CategoryDetailsViewModel viewModel = CategoryDetailsViewModel();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    viewModel.getSource(widget.category.id);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<SourceResponse?>(
-        future: ApiManager.getSources(widget.category.id),
-        builder: (context, snapShot) {
-          if (snapShot.connectionState == ConnectionState.waiting) {
+    return BlocBuilder<CategoryDetailsViewModel, SourceState>(
+        bloc: viewModel,
+        builder: (context, state) {
+          if (state is SourceLoadingState) {
             return Center(
               child: CircularProgressIndicator(
                 color: AppColors.primaryLightColor,
               ),
             );
-          } else if (snapShot.hasError) {
+          } else if (state is SourceErrorState) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
-                  child: Text("Some thing went wrong",
+                  child: Text(state.errorMessage,
                       style: Theme.of(context).textTheme.bodySmall),
                 ),
                 ElevatedButton(
@@ -40,44 +50,18 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                         backgroundColor:
                             WidgetStateProperty.all(AppColors.blueColor)),
                     onPressed: () {
-                      ApiManager.getSources(widget.category.id);
-                      setState(() {});
+                      viewModel.getSource(widget.category.id);
                     },
                     child: Text("Try Again",
                         style: Theme.of(context).textTheme.titleSmall))
               ],
             );
-
-            /// server response
-            /// error
-          }
-          if (snapShot.data!.status != 'ok') {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Text(snapShot.data!.message!,
-                      style: Theme.of(context).textTheme.bodySmall),
-                ),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            WidgetStateProperty.all(AppColors.blueColor)),
-                    onPressed: () {
-                      ApiManager.getSources(widget.category.id);
-                      setState(() {});
-                    },
-                    child: Text(
-                      "Try Again",
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ))
-              ],
+          } else if (state is SourceSuccessState) {
+            return TabWidget(
+              sourceList: state.sourceList,
             );
           }
-
-          /// success
-          var sourceList = snapShot.data!.sources!;
-          return TabWidget(sourceList: sourceList);
+          return Container();
         });
   }
 }

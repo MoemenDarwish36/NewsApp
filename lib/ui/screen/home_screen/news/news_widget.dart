@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/model/Articles.dart';
 import 'package:news_app/model/NewsResponse.dart';
 import 'package:news_app/model/Sources.dart';
-import 'package:news_app/ui/screen/home_screen/news/news_item.dart';
+import 'package:news_app/ui/screen/home_screen/news/cubit/news_details_view_model.dart';
+import 'package:news_app/ui/screen/home_screen/news/cubit/news_state.dart';
 import 'package:news_app/ui/utilites/api_manger.dart';
 
 import '../../../utilites/app_colors.dart';
+import 'news_item.dart';
 
 class NewsWidget extends StatefulWidget {
   Source source;
@@ -17,17 +20,17 @@ class NewsWidget extends StatefulWidget {
 }
 
 class _NewsWidgetState extends State<NewsWidget> {
+  NewsDetailsViewModel viewModel = NewsDetailsViewModel();
+
   int page = 1;
-
   int pageSize = 10;
-
   ScrollController scrollController = ScrollController();
-
   List<News> newsList = [];
 
   @override
   void initState() {
     super.initState();
+    viewModel.getNewsBySourceId(widget.source.id ?? '', page);
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.offset != 0 &&
@@ -55,22 +58,21 @@ class _NewsWidgetState extends State<NewsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NewsResponse?>(
-        future: ApiManager.getNewsBySourceId(
-            sourceId: widget.source.id ?? '', page: page),
-        builder: (context, snapShot) {
-          if (snapShot.connectionState == ConnectionState.waiting) {
+    return BlocBuilder<NewsDetailsViewModel, NewsState>(
+        bloc: viewModel,
+        builder: (context, state) {
+          if (state is NewsLoadingState) {
             return Center(
               child: CircularProgressIndicator(
                 color: AppColors.primaryLightColor,
               ),
             );
-          } else if (snapShot.hasError) {
+          } else if (state is NewsErrorState) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Center(
-                  child: Text("Some thing went wrong",
+                  child: Text(state.errorMessage,
                       style: Theme.of(context).textTheme.bodySmall),
                 ),
                 ElevatedButton(
@@ -78,46 +80,21 @@ class _NewsWidgetState extends State<NewsWidget> {
                         backgroundColor:
                             WidgetStateProperty.all(AppColors.blueColor)),
                     onPressed: () {
-                      ApiManager.getNewsBySourceId(
-                          sourceId: widget.source.id ?? '');
-                      setState(() {});
+                      viewModel.getNewsBySourceId(widget.source.id ?? '', page);
                     },
                     child: Text("Try Again",
                         style: Theme.of(context).textTheme.titleSmall))
               ],
             );
+          } else if (state is NewsSuccessState) {
+            return ListView.builder(
+                controller: scrollController,
+                itemCount: state.newsList.length,
+                itemBuilder: (context, index) {
+                  return NewsItem(news: state.newsList[index]);
+                });
           }
-          if (snapShot.data!.status != 'ok') {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Text(snapShot.data!.message!,
-                      style: Theme.of(context).textTheme.bodySmall),
-                ),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            WidgetStateProperty.all(AppColors.blueColor)),
-                    onPressed: () {
-                      ApiManager.getNewsBySourceId(
-                          sourceId: widget.source.id ?? '');
-                      setState(() {});
-                    },
-                    child: Text(
-                      "Try Again",
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ))
-              ],
-            );
-          }
-          newsList = snapShot.data!.articles!;
-          return ListView.builder(
-              controller: scrollController,
-              itemCount: newsList.length,
-              itemBuilder: (context, index) {
-                return NewsItem(news: newsList[index]);
-              });
+          return Container();
         });
   }
 }
