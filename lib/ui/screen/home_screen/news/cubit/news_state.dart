@@ -15,5 +15,14 @@ class NewsErrorState extends NewsState {
 class NewsSuccessState extends NewsState {
   List<News> newsList;
 
+  // final int selectedIndex;
+
   NewsSuccessState({required this.newsList});
+}
+
+class NewsChangeState extends NewsState {
+  // int selectedIndex;
+  String sourceId;
+
+  NewsChangeState({required this.sourceId});
 }

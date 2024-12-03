@@ -22,4 +22,12 @@ class NewsDetailsViewModel extends Cubit<NewsState> {
       emit(NewsErrorState(errorMessage: e.toString()));
     }
   }
+
+  int selectedIndex = 0;
+
+  void updateSelectedIndex(int index, String sourceId) {
+    print('0000000000000000000000000');
+    selectedIndex = index;
+    emit(NewsChangeState(sourceId: sourceId));
+  }
 }

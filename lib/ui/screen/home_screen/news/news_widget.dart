@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/model/Articles.dart';
-import 'package:news_app/model/NewsResponse.dart';
 import 'package:news_app/model/Sources.dart';
 import 'package:news_app/ui/screen/home_screen/news/cubit/news_details_view_model.dart';
 import 'package:news_app/ui/screen/home_screen/news/cubit/news_state.dart';
-import 'package:news_app/ui/utilites/api_manger.dart';
 
 import '../../../utilites/app_colors.dart';
 import 'news_item.dart';
 
 class NewsWidget extends StatefulWidget {
   Source source;
+  NewsDetailsViewModel viewModel;
 
-  NewsWidget({super.key, required this.source});
+  NewsWidget({super.key, required this.source, required this.viewModel});
 
   @override
   State<NewsWidget> createState() => _NewsWidgetState();
 }
 
 class _NewsWidgetState extends State<NewsWidget> {
-  NewsDetailsViewModel viewModel = NewsDetailsViewModel();
+  // NewsDetailsViewModel viewModel = NewsDetailsViewModel();
 
   int page = 1;
   int pageSize = 10;
@@ -30,7 +29,8 @@ class _NewsWidgetState extends State<NewsWidget> {
   @override
   void initState() {
     super.initState();
-    viewModel.getNewsBySourceId(widget.source.id ?? '', page);
+    widget.viewModel.getNewsBySourceId(widget.source.id ?? '', page);
+    print('---------------------------------');
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.offset != 0 &&
@@ -42,12 +42,12 @@ class _NewsWidgetState extends State<NewsWidget> {
     });
   }
 
-  Future<void> loadMoreNews() async {
-    NewsResponse? response = await ApiManager.getNewsBySourceId(
-        sourceId: widget.source.id ?? '', page: page++, pageSize: pageSize);
-    newsList.addAll(response?.articles ?? []);
+  void loadMoreNews() {
+    // NewsResponse? response =
+    widget.viewModel.getNewsBySourceId(widget.source.id ?? '', page++);
+    // newsList.addAll(response?.articles ?? []);
 
-    setState(() {});
+    // setState(() {});
   }
 
   @override
@@ -58,8 +58,15 @@ class _NewsWidgetState extends State<NewsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NewsDetailsViewModel, NewsState>(
-        bloc: viewModel,
+    return BlocConsumer<NewsDetailsViewModel, NewsState>(
+        bloc: widget.viewModel,
+        listener: (context, state) {
+          if (state is NewsChangeState) {
+            widget.viewModel.getNewsBySourceId(state.sourceId, page);
+
+            print('--------------------------------0000000000');
+          }
+        },
         builder: (context, state) {
           if (state is NewsLoadingState) {
             return Center(
@@ -80,7 +87,8 @@ class _NewsWidgetState extends State<NewsWidget> {
                         backgroundColor:
                             WidgetStateProperty.all(AppColors.blueColor)),
                     onPressed: () {
-                      viewModel.getNewsBySourceId(widget.source.id ?? '', page);
+                      widget.viewModel
+                          .getNewsBySourceId(widget.source.id ?? '', page);
                     },
                     child: Text("Try Again",
                         style: Theme.of(context).textTheme.titleSmall))
