@@ -6,11 +6,12 @@ import '../../../../utilites/api_manger.dart';
 class NewsDetailsViewModel extends Cubit<NewsState> {
   NewsDetailsViewModel() : super(NewsLoadingState());
 
-  void getNewsBySourceId({String? sourceId, int? page, int? pageSize}) async {
+  void getNewsBySourceId(
+      {String? sourceId, int? page, int? pageSize, String? query}) async {
     try {
       emit(NewsLoadingState());
       var response = await ApiManager.getNewsBySourceId(
-          sourceId: sourceId, page: page, pageSize: pageSize);
+          sourceId: sourceId, page: page, pageSize: pageSize, query: query);
       if (response?.status == 'error') {
         emit(NewsErrorState(errorMessage: response!.message!));
         return;

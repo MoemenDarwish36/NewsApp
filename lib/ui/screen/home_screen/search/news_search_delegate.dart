@@ -35,7 +35,7 @@ class NewsSearchDelegate extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     if (query.isNotEmpty) {
       return FutureBuilder<NewsResponse?>(
-          future: ApiManager.getNewsSearchBySourceId(query),
+          future: ApiManager.getNewsBySourceId(query: query),
           builder: (context, snapShot) {
             if (snapShot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -56,7 +56,7 @@ class NewsSearchDelegate extends SearchDelegate {
                           backgroundColor:
                               WidgetStateProperty.all(AppColors.blueColor)),
                       onPressed: () {
-                        ApiManager.getNewsSearchBySourceId(query);
+                        ApiManager.getNewsBySourceId(query: query);
                       },
                       child: Text("Try Again",
                           style: Theme.of(context).textTheme.titleSmall))
@@ -76,7 +76,7 @@ class NewsSearchDelegate extends SearchDelegate {
                           backgroundColor:
                               WidgetStateProperty.all(AppColors.blueColor)),
                       onPressed: () {
-                        ApiManager.getNewsSearchBySourceId(query);
+                        ApiManager.getNewsBySourceId(query: query);
                       },
                       child: Text(
                         "Try Again",

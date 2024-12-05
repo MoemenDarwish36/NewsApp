@@ -30,12 +30,13 @@ class ApiManager {
   }
 
   static Future<NewsResponse?> getNewsBySourceId(
-      {String? sourceId, int? page, int? pageSize}) async {
+      {String? sourceId, int? page, int? pageSize, String? query}) async {
     Uri url = Uri.https(_baseUrl, _newsEndPoint, {
       'apiKey': _apiKey,
       'sources': sourceId,
       'pageSize': pageSize.toString(),
-      'page': page.toString()
+      'page': page.toString(),
+      'q': query
     });
 
     http.Response response = await http.get(url);
@@ -47,16 +48,4 @@ class ApiManager {
     }
   }
 
-  static Future<NewsResponse?> getNewsSearchBySourceId(String query) async {
-    Uri url =
-        Uri.https(_baseUrl, _newsEndPoint, {'apiKey': _apiKey, 'q': query});
-
-    http.Response response = await http.get(url);
-    try {
-      Map json = jsonDecode(response.body) as Map;
-      return NewsResponse.fromJson(json);
-    } catch (e) {
-      throw e;
-    }
-  }
 }
