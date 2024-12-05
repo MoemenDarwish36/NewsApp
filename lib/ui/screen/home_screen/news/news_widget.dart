@@ -77,7 +77,6 @@ class _NewsWidgetState extends State<NewsWidget> {
                             WidgetStateProperty.all(AppColors.blueColor)),
                     onPressed: () {
                       viewModel.getNewsBySourceId(widget.source.id ?? '', page);
-                      setState(() {});
                     },
                     child: Text("Try Again",
                         style: Theme.of(context).textTheme.titleSmall))

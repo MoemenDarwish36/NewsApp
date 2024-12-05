@@ -45,7 +45,6 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                             WidgetStateProperty.all(AppColors.blueColor)),
                     onPressed: () {
                       viewModel.getSources(widget.category.id);
-                      setState(() {});
                     },
                     child: Text("Try Again",
                         style: Theme.of(context).textTheme.titleSmall))
