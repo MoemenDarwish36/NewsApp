@@ -17,17 +17,3 @@ class SourceSuccessState extends SourceState {
 
   SourceSuccessState({required this.sourceList});
 }
-
-// class SourceChangeState extends SourceState {
-//   int selectedIndex;
-//   SourceChangeState({required this.selectedIndex});
-// }
-// class SourceSuccessState extends SourceState {
-//   final List<Source> sourceList;
-//   final int selectedIndex;
-//
-//   SourceSuccessState({
-//     required this.sourceList,
-//     required this.selectedIndex,
-//   });
-// }

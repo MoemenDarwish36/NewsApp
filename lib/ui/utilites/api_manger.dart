@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:news_app/model/NewsResponse.dart';
 import 'package:news_app/model/SourceResponse.dart';
 
+//500c5a4f9b244f3db92a47f436f1819e
+//7ddcd4e71f2849a38b3fb1f3818b3094
 class ApiManager {
   static const String _apiKey = "7ddcd4e71f2849a38b3fb1f3818b3094";
 

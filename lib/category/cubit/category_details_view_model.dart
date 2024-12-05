@@ -20,10 +20,4 @@ class CategoryDetailsViewModel extends Cubit<SourceState> {
       emit(SourceErrorState(errorMessage: e.toString()));
     }
   }
-//
-// void updateSelectedIndex(int index) {
-//   if (sourceList.isNotEmpty) {
-//     emit(SourceChangeState(selectedIndex: index));
-//   }
-// }
 }

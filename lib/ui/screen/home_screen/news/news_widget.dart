@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:news_app/model/Articles.dart';
 import 'package:news_app/model/Sources.dart';
 import 'package:news_app/ui/screen/home_screen/news/cubit/news_details_view_model.dart';
 import 'package:news_app/ui/screen/home_screen/news/cubit/news_state.dart';
@@ -19,18 +18,15 @@ class NewsWidget extends StatefulWidget {
 }
 
 class _NewsWidgetState extends State<NewsWidget> {
-  // NewsDetailsViewModel viewModel = NewsDetailsViewModel();
-
   int page = 1;
   int pageSize = 10;
   ScrollController scrollController = ScrollController();
-  List<News> newsList = [];
 
   @override
   void initState() {
     super.initState();
-    widget.viewModel.getNewsBySourceId(widget.source.id ?? '', page);
-    print('---------------------------------');
+    widget.viewModel
+        .getNewsBySourceId(sourceId: widget.source.id ?? '', page: page);
     scrollController.addListener(() {
       if (scrollController.position.atEdge) {
         if (scrollController.offset != 0 &&
@@ -43,11 +39,9 @@ class _NewsWidgetState extends State<NewsWidget> {
   }
 
   void loadMoreNews() {
-    // NewsResponse? response =
-    widget.viewModel.getNewsBySourceId(widget.source.id ?? '', page++);
-    // newsList.addAll(response?.articles ?? []);
-
-    // setState(() {});
+    widget.viewModel.getNewsBySourceId(
+        sourceId: widget.source.id ?? '', page: page, pageSize: pageSize);
+    setState(() {});
   }
 
   @override
@@ -62,9 +56,8 @@ class _NewsWidgetState extends State<NewsWidget> {
         bloc: widget.viewModel,
         listener: (context, state) {
           if (state is NewsChangeState) {
-            widget.viewModel.getNewsBySourceId(state.sourceId, page);
-
-            print('--------------------------------0000000000');
+            widget.viewModel
+                .getNewsBySourceId(sourceId: state.sourceId, page: page);
           }
         },
         builder: (context, state) {
@@ -87,8 +80,8 @@ class _NewsWidgetState extends State<NewsWidget> {
                         backgroundColor:
                             WidgetStateProperty.all(AppColors.blueColor)),
                     onPressed: () {
-                      widget.viewModel
-                          .getNewsBySourceId(widget.source.id ?? '', page);
+                      widget.viewModel.getNewsBySourceId(
+                          sourceId: widget.source.id ?? '', page: page);
                     },
                     child: Text("Try Again",
                         style: Theme.of(context).textTheme.titleSmall))

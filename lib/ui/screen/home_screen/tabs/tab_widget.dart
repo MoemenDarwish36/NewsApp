@@ -7,19 +7,12 @@ import 'package:news_app/ui/screen/home_screen/tabs/tab_item.dart';
 
 import '../../../../model/Sources.dart';
 
-class TabWidget extends StatefulWidget {
+class TabWidget extends StatelessWidget {
   List<Source> sourceList;
 
   TabWidget({super.key, required this.sourceList});
 
-  @override
-  State<TabWidget> createState() => _TabWidgetState();
-}
-
-class _TabWidgetState extends State<TabWidget> {
   NewsDetailsViewModel viewModel = NewsDetailsViewModel();
-
-  // int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -28,30 +21,27 @@ class _TabWidgetState extends State<TabWidget> {
       child: BlocBuilder<NewsDetailsViewModel, NewsState>(
         builder: (context, state) {
           return DefaultTabController(
-            length: widget.sourceList.length,
+            length: sourceList.length,
             child: Column(
               children: [
                 TabBar(
                     onTap: (index) {
-                      // selectedIndex = index;
-                      // setState(() {});
                       viewModel.updateSelectedIndex(
-                          index, widget.sourceList[index].id ?? '');
-                      // viewModel.getNewsBySourceId(widget.sourceList[selectedIndex].id ?? '' , 1);
+                          index, sourceList[index].id ?? '');
                     },
                     isScrollable: true,
                     indicatorColor: Colors.transparent,
-                    tabs: widget.sourceList
+                    tabs: sourceList
                         .map((source) => TabItem(
                             isSelected: viewModel.selectedIndex ==
-                                widget.sourceList.indexOf(source),
+                                sourceList.indexOf(source),
                             source: source))
                         .toList()),
                 Expanded(
                     child: BlocProvider.value(
                         value: viewModel,
                         child: NewsWidget(
-                          source: widget.sourceList[viewModel.selectedIndex],
+                          source: sourceList[viewModel.selectedIndex],
                           viewModel: viewModel,
                         )))
               ],

@@ -3,7 +3,7 @@ import 'package:news_app/category/category_item.dart';
 import 'package:news_app/category/category_model.dart';
 
 class CategoryFragment extends StatelessWidget {
-  late dynamic categoriesList;
+  late List categoriesList;
 
   Function onCategoryItemClick;
 

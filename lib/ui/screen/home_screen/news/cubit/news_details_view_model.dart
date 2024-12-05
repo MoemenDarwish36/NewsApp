@@ -6,11 +6,11 @@ import '../../../../utilites/api_manger.dart';
 class NewsDetailsViewModel extends Cubit<NewsState> {
   NewsDetailsViewModel() : super(NewsLoadingState());
 
-  void getNewsBySourceId(String sourceId, int page) async {
+  void getNewsBySourceId({String? sourceId, int? page, int? pageSize}) async {
     try {
       emit(NewsLoadingState());
-      var response =
-          await ApiManager.getNewsBySourceId(sourceId: sourceId, page: page);
+      var response = await ApiManager.getNewsBySourceId(
+          sourceId: sourceId, page: page, pageSize: pageSize);
       if (response?.status == 'error') {
         emit(NewsErrorState(errorMessage: response!.message!));
         return;
@@ -26,7 +26,6 @@ class NewsDetailsViewModel extends Cubit<NewsState> {
   int selectedIndex = 0;
 
   void updateSelectedIndex(int index, String sourceId) {
-    print('0000000000000000000000000');
     selectedIndex = index;
     emit(NewsChangeState(sourceId: sourceId));
   }
