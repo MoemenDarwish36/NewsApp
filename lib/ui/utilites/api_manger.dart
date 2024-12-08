@@ -15,7 +15,7 @@ class ApiManager {
 
   static const String _newsEndPoint = "/v2/everything";
 
-  static Future<SourceResponse?> getSources(String categoryId) async {
+  Future<SourceResponse?> getSources(String categoryId) async {
     Uri url = Uri.https(_baseUrl, _sourcesEndPoint, {
       'apiKey': _apiKey,
       'category': categoryId,
@@ -29,7 +29,7 @@ class ApiManager {
     }
   }
 
-  static Future<NewsResponse?> getNewsBySourceId(
+  Future<NewsResponse?> getNewsBySourceId(
       {String? sourceId, int? page, int? pageSize, String? query}) async {
     Uri url = Uri.https(_baseUrl, _newsEndPoint, {
       'apiKey': _apiKey,

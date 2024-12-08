@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../model/NewsResponse.dart';
 import '../../../utilites/api_manger.dart';
 import '../../../utilites/app_colors.dart';
+import '../news/cubit/news_details_view_model.dart';
+import '../news/cubit/news_state.dart';
 import '../news/news_item.dart';
 
 class NewsSearchDelegate extends SearchDelegate {
+  ApiManager apiManager = ApiManager();
+
+  NewsDetailsViewModel viewModel = NewsDetailsViewModel();
+
+  String? lastQuery;
+
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -33,22 +41,28 @@ class NewsSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    if (query.isNotEmpty && query != lastQuery) {
+      lastQuery = query;
+      viewModel.getNewsBySourceId(query: query);
+      print('object0000000000000000000000');
+    }
     if (query.isNotEmpty) {
-      return FutureBuilder<NewsResponse?>(
-          future: ApiManager.getNewsBySourceId(query: query),
-          builder: (context, snapShot) {
-            if (snapShot.connectionState == ConnectionState.waiting) {
+      print("object11111111111111111111111");
+      return BlocBuilder<NewsDetailsViewModel, NewsState>(
+          bloc: viewModel,
+          builder: (context, state) {
+            if (state is NewsLoadingState) {
               return Center(
                 child: CircularProgressIndicator(
                   color: AppColors.primaryLightColor,
                 ),
               );
-            } else if (snapShot.hasError) {
+            } else if (state is NewsErrorState) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
-                    child: Text("Some thing went wrong",
+                    child: Text(state.errorMessage,
                         style: Theme.of(context).textTheme.bodySmall),
                   ),
                   ElevatedButton(
@@ -56,41 +70,20 @@ class NewsSearchDelegate extends SearchDelegate {
                           backgroundColor:
                               WidgetStateProperty.all(AppColors.blueColor)),
                       onPressed: () {
-                        ApiManager.getNewsBySourceId(query: query);
+                        viewModel.getNewsBySourceId(query: query);
                       },
                       child: Text("Try Again",
                           style: Theme.of(context).textTheme.titleSmall))
                 ],
               );
+            } else if (state is NewsSuccessState) {
+              return ListView.builder(
+                  itemCount: state.newsList.length,
+                  itemBuilder: (context, index) {
+                    return NewsItem(news: state.newsList[index]);
+                  });
             }
-            if (snapShot.data!.status != 'ok') {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Text(snapShot.data!.message!,
-                        style: Theme.of(context).textTheme.bodySmall),
-                  ),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              WidgetStateProperty.all(AppColors.blueColor)),
-                      onPressed: () {
-                        ApiManager.getNewsBySourceId(query: query);
-                      },
-                      child: Text(
-                        "Try Again",
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ))
-                ],
-              );
-            }
-            var newsList = snapShot.data!.articles!;
-            return ListView.builder(
-                itemCount: newsList.length,
-                itemBuilder: (context, index) {
-                  return NewsItem(news: newsList[index]);
-                });
+            return Container();
           });
     } else {
       return const Center(
