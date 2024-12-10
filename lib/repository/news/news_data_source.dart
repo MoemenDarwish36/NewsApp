@@ -5,4 +5,9 @@ abstract class NewsRemoteDataSource {
       {String? sourceId, int? page, int? pageSize, String? query});
 }
 
-abstract class NewsOfflineDataSource {}
+abstract class NewsLocalDataSource {
+  Future<NewsResponse?> getNewsBySourceId(
+      {String? sourceId, int? page, int? pageSize, String? query});
+
+  void saveNews(NewsResponse? newsResponse, String sourceId);
+}

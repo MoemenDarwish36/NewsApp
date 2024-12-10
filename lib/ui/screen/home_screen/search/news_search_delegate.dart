@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../utilites/api_manger.dart';
 import '../../../utilites/app_colors.dart';
 import '../news/cubit/news_details_view_model.dart';
 import '../news/cubit/news_state.dart';
 import '../news/news_item.dart';
 
 class NewsSearchDelegate extends SearchDelegate {
-  ApiManager apiManager = ApiManager();
-
   NewsDetailsViewModel viewModel = NewsDetailsViewModel();
 
   String? lastQuery;
@@ -44,10 +41,8 @@ class NewsSearchDelegate extends SearchDelegate {
     if (query.isNotEmpty && query != lastQuery) {
       lastQuery = query;
       viewModel.getNewsBySourceId(query: query);
-      print('object0000000000000000000000');
     }
     if (query.isNotEmpty) {
-      print("object11111111111111111111111");
       return BlocBuilder<NewsDetailsViewModel, NewsState>(
           bloc: viewModel,
           builder: (context, state) {

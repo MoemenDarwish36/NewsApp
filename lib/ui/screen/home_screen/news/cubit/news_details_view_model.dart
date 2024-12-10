@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app/repository/news/data_sources/news_local_data_source_impl.dart';
 import 'package:news_app/repository/news/data_sources/news_remote_data_source_impl.dart';
 import 'package:news_app/repository/news/news_data_source.dart';
 import 'package:news_app/repository/news/news_repository_contract.dart';
@@ -13,11 +14,14 @@ class NewsDetailsViewModel extends Cubit<NewsState> {
   late NewsRemoteDataSource remoteDataSource;
 
   late ApiManager apiManager;
+  late NewsLocalDataSource localDataSource;
 
   NewsDetailsViewModel() : super(NewsLoadingState()) {
     apiManager = ApiManager();
     remoteDataSource = NewsRemoteDataSourceImpl(apiManager: apiManager);
-    repositoryContract = NewsRepositoryImpl(remoteDataSource: remoteDataSource);
+    localDataSource = NewsLocalDataSourceImpl();
+    repositoryContract = NewsRepositoryImpl(
+        remoteDataSource: remoteDataSource, localDataSource: localDataSource);
   }
 
   void getNewsBySourceId(
