@@ -17,7 +17,7 @@ class NewsDetailsViewModel extends Cubit<NewsState> {
   late NewsLocalDataSource localDataSource;
 
   NewsDetailsViewModel() : super(NewsLoadingState()) {
-    apiManager = ApiManager();
+    apiManager = ApiManager.getInstance();
     remoteDataSource = NewsRemoteDataSourceImpl(apiManager: apiManager);
     localDataSource = NewsLocalDataSourceImpl();
     repositoryContract = NewsRepositoryImpl(
