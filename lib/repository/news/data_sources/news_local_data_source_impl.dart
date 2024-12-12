@@ -1,7 +1,9 @@
 import 'package:hive/hive.dart';
+import 'package:injectable/injectable.dart';
 import 'package:news_app/model/NewsResponse.dart';
 import 'package:news_app/repository/news/news_data_source.dart';
 
+@Injectable(as: NewsLocalDataSource)
 class NewsLocalDataSourceImpl implements NewsLocalDataSource {
   @override
   Future<NewsResponse?> getNewsBySourceId(

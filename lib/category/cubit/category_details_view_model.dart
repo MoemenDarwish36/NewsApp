@@ -1,25 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:news_app/category/cubit/source_state.dart';
-import 'package:news_app/repository/sources/data_sources/source_local_data_source_impl.dart';
-import 'package:news_app/repository/sources/data_sources/source_remote_data_source_impl.dart';
-import 'package:news_app/repository/sources/repository/source_repository_impl.dart';
-import 'package:news_app/repository/sources/source_data_source.dart';
-import 'package:news_app/repository/sources/source_repository_contract.dart';
-import 'package:news_app/ui/utilites/api_manger.dart';
 
+import '../../repository/sources/source_repository_contract.dart';
+
+@injectable
 class CategoryDetailsViewModel extends Cubit<SourceState> {
-  late SourceRepositoryContract repositoryContract;
-  late SourceRemoteDataSource remoteDataSource;
-  late ApiManager apiManager;
-  late SourceLocalDataSource localDataSource;
+  SourceRepositoryContract repositoryContract;
 
-  CategoryDetailsViewModel() : super(SourceLoadingState()) {
-    apiManager = ApiManager.getInstance();
-    remoteDataSource = SourceRemoteDataSourceImpl(apiManager: apiManager);
-    localDataSource = SourceLocalDataSourceImpl();
-    repositoryContract = SourceRepositoryImpl(
-        remoteDataSource: remoteDataSource, localDataSource: localDataSource);
-  }
+  CategoryDetailsViewModel({required this.repositoryContract})
+      : super(SourceLoadingState());
 
   void getSource(String categoryId) async {
     try {

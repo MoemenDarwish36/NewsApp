@@ -1,28 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:news_app/repository/news/data_sources/news_local_data_source_impl.dart';
-import 'package:news_app/repository/news/data_sources/news_remote_data_source_impl.dart';
-import 'package:news_app/repository/news/news_data_source.dart';
+import 'package:injectable/injectable.dart';
 import 'package:news_app/repository/news/news_repository_contract.dart';
-import 'package:news_app/repository/news/repository/news_repository_impl.dart';
 import 'package:news_app/ui/screen/home_screen/news/cubit/news_state.dart';
 
-import '../../../../utilites/api_manger.dart';
-
+@injectable
 class NewsDetailsViewModel extends Cubit<NewsState> {
-  late NewsRepositoryContract repositoryContract;
+  NewsRepositoryContract repositoryContract;
 
-  late NewsRemoteDataSource remoteDataSource;
-
-  late ApiManager apiManager;
-  late NewsLocalDataSource localDataSource;
-
-  NewsDetailsViewModel() : super(NewsLoadingState()) {
-    apiManager = ApiManager.getInstance();
-    remoteDataSource = NewsRemoteDataSourceImpl(apiManager: apiManager);
-    localDataSource = NewsLocalDataSourceImpl();
-    repositoryContract = NewsRepositoryImpl(
-        remoteDataSource: remoteDataSource, localDataSource: localDataSource);
-  }
+  NewsDetailsViewModel({required this.repositoryContract})
+      : super(NewsLoadingState());
 
   void getNewsBySourceId(
       {String? sourceId, int? page, int? pageSize, String? query}) async {

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/category/category_model.dart';
 import 'package:news_app/category/cubit/category_details_view_model.dart';
 import 'package:news_app/category/cubit/source_state.dart';
+import 'package:news_app/di/di.dart';
 
 import '../ui/screen/home_screen/tabs/tab_widget.dart';
 import '../ui/utilites/app_colors.dart';
@@ -17,7 +18,9 @@ class CategoryDetails extends StatefulWidget {
 }
 
 class _CategoryDetailsState extends State<CategoryDetails> {
-  CategoryDetailsViewModel viewModel = CategoryDetailsViewModel();
+  CategoryDetailsViewModel viewModel = getIt<CategoryDetailsViewModel>();
+
+  /// filled injection
 
   @override
   void initState() {

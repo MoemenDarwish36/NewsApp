@@ -18,6 +18,7 @@ class NewsWidget extends StatefulWidget {
 }
 
 class _NewsWidgetState extends State<NewsWidget> {
+  // NewsDetailsViewModel viewModel = NewsDetailsViewModel() ;
   int page = 1;
   int pageSize = 10;
   ScrollController scrollController = ScrollController();

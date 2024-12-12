@@ -1,7 +1,9 @@
 import 'package:hive/hive.dart';
+import 'package:injectable/injectable.dart';
 import 'package:news_app/model/SourceResponse.dart';
 import 'package:news_app/repository/sources/source_data_source.dart';
 
+@Injectable(as: SourceLocalDataSource)
 class SourceLocalDataSourceImpl implements SourceLocalDataSource {
   @override
   Future<SourceResponse?> getSources(String categoryId) async {

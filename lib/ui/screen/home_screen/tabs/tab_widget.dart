@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app/di/di.dart';
 import 'package:news_app/ui/screen/home_screen/news/cubit/news_details_view_model.dart';
 import 'package:news_app/ui/screen/home_screen/news/cubit/news_state.dart';
 import 'package:news_app/ui/screen/home_screen/news/news_widget.dart';
@@ -12,7 +13,7 @@ class TabWidget extends StatelessWidget {
 
   TabWidget({super.key, required this.sourceList});
 
-  NewsDetailsViewModel viewModel = NewsDetailsViewModel();
+  NewsDetailsViewModel viewModel = getIt<NewsDetailsViewModel>();
 
   @override
   Widget build(BuildContext context) {

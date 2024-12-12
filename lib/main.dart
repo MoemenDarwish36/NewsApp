@@ -11,6 +11,7 @@ import 'package:news_app/ui/utilites/app_theme.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'di/di.dart';
 import 'my_bloc_observer/my_bloc_observer.dart';
 
 void main() async {
@@ -18,7 +19,7 @@ void main() async {
   Bloc.observer = MyBlocObserver();
   final documentDirectory = await getApplicationDocumentsDirectory();
   Hive.init(documentDirectory.path);
-
+  configureDependencies();
   LanguageProvider languageProvider = LanguageProvider();
 
   await languageProvider.getLanguage();

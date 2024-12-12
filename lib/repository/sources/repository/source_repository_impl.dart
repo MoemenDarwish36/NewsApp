@@ -1,8 +1,10 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:injectable/injectable.dart';
 import 'package:news_app/model/SourceResponse.dart';
 import 'package:news_app/repository/sources/source_data_source.dart';
 import 'package:news_app/repository/sources/source_repository_contract.dart';
 
+@Injectable(as: SourceRepositoryContract)
 class SourceRepositoryImpl implements SourceRepositoryContract {
   SourceRemoteDataSource remoteDataSource;
   SourceLocalDataSource localDataSource;

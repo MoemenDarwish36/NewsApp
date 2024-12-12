@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../di/di.dart';
 import '../../../utilites/app_colors.dart';
 import '../news/cubit/news_details_view_model.dart';
 import '../news/cubit/news_state.dart';
 import '../news/news_item.dart';
 
 class NewsSearchDelegate extends SearchDelegate {
-  NewsDetailsViewModel viewModel = NewsDetailsViewModel();
+  NewsDetailsViewModel viewModel = getIt<NewsDetailsViewModel>();
 
   String? lastQuery;
 
